@@ -995,24 +995,18 @@ message MHDDataParameter {
   optional uint32 deform_control_point = 8 [default = 2];
   optional float deform_sigma = 9 [default = 15.0];
   optional ContourNameList contour_name_list = 10;
-  optional float shrink_factor_x = 11 [default = 1.0];
-  optional float shrink_factor_y = 12 [default = 1.0];
-  optional float shrink_factor_z = 13 [default = 1.0];
-  optional uint32 max_width = 14 [default = 256];
-  optional uint32 max_height = 15 [default = 256];
-  optional uint32 max_length = 16 [default = 128];
-  optional float resample_slice_spacing_x = 17 [default = 2.0];
-  optional float resample_slice_spacing_y = 18 [default = 2.0];
-  optional float resample_spacing_x = 19 [default = 2.0];
-  optional float resample_spacing_y = 20 [default = 2.0];
-  optional float resample_spacing_z = 21 [default = 2.0];
-  optional float truncate_probability = 22 [default = 0.5];
-  optional uint32 min_truncate_length = 23 [default = 50];
-  optional uint32 inplane_shift = 24 [default = 0];
-  optional float min_intensity = 25 [default = -1000.0];
-  optional float max_intensity = 26 [default = 1600.0];
-  optional string buffer_path = 27 [default = ""];
-  optional bool buffer_exist = 28 [default = false];
+  optional uint32 max_width = 11 [default = 256];
+  optional uint32 max_height = 12 [default = 256];
+  optional uint32 max_length = 13 [default = 128];
+  optional float resample_spacing_x = 14 [default = 2.0];
+  optional float resample_spacing_y = 15 [default = 2.0];
+  optional float resample_spacing_z = 16 [default = 2.0];
+  optional float truncate_probability = 17 [default = 0.5];
+  optional uint32 min_truncate_length = 18 [default = 50];
+  optional uint32 inplane_shift = 19 [default = 0];
+  // Rescale CT HU from [min_intensity, max_intensity] to [0, 1]
+  optional float min_intensity = 20 [default = -1000.0];
+  optional float max_intensity = 21 [default = 1600.0];
 }
 
 message MHDDataWithDenseParameter {
@@ -1453,6 +1447,7 @@ message SlicePredictParameter {
   optional string input_path = 2 [default = ""];
   optional string output_path = 3 [default = ""];
   optional ContourNameList contour_name_list = 4;
+  optional uint32 extract_direction = 5 [default = 0]; // 0: axial 1: coronal 2: sagittal
 }
 
 message SmoothL1LossParameter {

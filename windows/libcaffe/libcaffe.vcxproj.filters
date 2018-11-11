@@ -357,17 +357,8 @@
     <ClCompile Include="..\..\src\caffe\layers\segment_output_layer.cpp">
       <Filter>src\layers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\caffe\layers\mhd_data_layer.cpp">
-      <Filter>src\layers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\caffe\util\modified_permutohedral.cpp">
       <Filter>src\util</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\caffe\layers\multi_channel_data_layer.cpp">
-      <Filter>src\layers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\caffe\layers\mhd_data_with_dense_layer.cpp">
-      <Filter>src\layers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\caffe\layers\pooling3d_layer.cpp">
       <Filter>src\layers</Filter>
@@ -403,12 +394,6 @@
       <Filter>src\layers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\caffe\layers\roi_crop_layer.cpp">
-      <Filter>src\layers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\caffe\layers\mhd_slice_data_layer.cpp">
-      <Filter>src\layers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\caffe\layers\slice_predict_layer.cpp">
       <Filter>src\layers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\caffe\layers\rpn_output_layer.cpp">
@@ -722,9 +707,6 @@
     <ClInclude Include="..\..\include\caffe\layers\dice_loss_layer.hpp">
       <Filter>include\layers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\caffe\layers\mhd_data_layer.hpp">
-      <Filter>include\layers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\caffe\layers\segment_output_layer.hpp">
       <Filter>include\layers</Filter>
     </ClInclude>
@@ -733,12 +715,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\caffe\util\modified_permutohedral.hpp">
       <Filter>include\util</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\caffe\layers\multi_channel_data_layer.hpp">
-      <Filter>include\layers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\caffe\layers\mhd_data_with_dense_layer.hpp">
-      <Filter>include\layers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\caffe\layers\pooling3d_layer.hpp">
       <Filter>include\layers</Filter>
@@ -771,12 +747,6 @@
       <Filter>include\layers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\caffe\layers\roi_crop_layer.hpp">
-      <Filter>include\layers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\caffe\layers\mhd_slice_data_layer.hpp">
-      <Filter>include\layers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\caffe\layers\slice_predict_layer.hpp">
       <Filter>include\layers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\caffe\layers\rpn_output_layer.hpp">

@@ -132,18 +132,19 @@ void WeightedSoftmaxWithLossLayer<Dtype>::Forward_gpu(
     int* tmp_weights_cpu_data = tmp_weights.mutable_cpu_data();
     Dtype* weights_cpu_data = channel_weights_.mutable_cpu_data();
     for (int i = 0; i < outer_num_; ++i) {
-      Dtype max_weight = 0;
+      Dtype weight_sum = 0;
       for (int j = 0; j < channel_num_; ++j) {
-        if (tmp_weights_cpu_data[i * channel_num_ + j] > max_weight) {
-      	  max_weight = tmp_weights_cpu_data[i * channel_num_ + j];
-        }
+        //if (tmp_weights_cpu_data[i * channel_num_ + j] > max_weight) {
+      	 // max_weight = tmp_weights_cpu_data[i * channel_num_ + j];
+        //}
+		weight_sum += tmp_weights_cpu_data[i * channel_num_ + j];
         //LOG(INFO) << "weights_data = " << tmp_weights_cpu_data[i * channel_num_ + j];
       }
       //LOG(INFO) << "max_weight = " << max_weight;
       for (int j = 0; j < channel_num_; ++j) {
         weights_cpu_data[i * channel_num_ + j] = 1;
         if (tmp_weights_cpu_data[i * channel_num_ + j] > 0)
-          weights_cpu_data[i * channel_num_ + j] = max_weight / tmp_weights_cpu_data[i * channel_num_ + j];
+          weights_cpu_data[i * channel_num_ + j] = weight_sum / tmp_weights_cpu_data[i * channel_num_ + j];
         else
           weights_cpu_data[i * channel_num_ + j] = 0;
         //LOG(INFO) << "normalized_weights_data = " << weights_cpu_data[i * channel_num_ + j];
@@ -151,7 +152,7 @@ void WeightedSoftmaxWithLossLayer<Dtype>::Forward_gpu(
     }
     // NOLINT_NEXT_LINE(whitespace/operators)
     Dtype* weights_gpu_data = channel_weights_.mutable_gpu_data();
-	if (method_ == WeightedSoftmaxLossParameter_Method_ADAPTIVE_WEIGHT) {
+	if (method_ == WeightedSoftmaxLossParameter_Method_ADAPTIVE_WEIGHT || gamma_ == 0) {
       WeightedSoftmaxLossForwardGPU<Dtype> << <CAFFE_GET_BLOCKS(nthreads),
           CAFFE_CUDA_NUM_THREADS>>>(nthreads, prob_data, label, loss_data, weights_gpu_data, 
           outer_num_, dim, inner_num_, has_ignore_label_, ignore_label_, counts);
@@ -305,9 +306,16 @@ void WeightedSoftmaxWithLossLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*
 	}
 	else if (method_ == WeightedSoftmaxLossParameter_Method_ADAPTIVE_FOCAL_LOSS) {
       const Dtype* weights_data = channel_weights_.gpu_data();
-  	  WeightedFocalLossBackwardGPU<Dtype> << <CAFFE_GET_BLOCKS(nthreads),
-          CAFFE_CUDA_NUM_THREADS>>>(nthreads, top_data, label, gamma_, weights_data, bottom_diff,
-          outer_num_, dim, inner_num_, has_ignore_label_, ignore_label_, counts);
+	  if (gamma_ == 0) {
+		  WeightedSoftmaxLossBackwardGPU<Dtype> << <CAFFE_GET_BLOCKS(nthreads),
+			  CAFFE_CUDA_NUM_THREADS >> >(nthreads, top_data, label, weights_data, bottom_diff,
+			  outer_num_, dim, inner_num_, has_ignore_label_, ignore_label_, counts);
+	  }
+	  else {
+		  WeightedFocalLossBackwardGPU<Dtype> << <CAFFE_GET_BLOCKS(nthreads),
+			  CAFFE_CUDA_NUM_THREADS >> >(nthreads, top_data, label, gamma_, weights_data, bottom_diff,
+			  outer_num_, dim, inner_num_, has_ignore_label_, ignore_label_, counts);
+	  }
 	}
 	else {
       FocalLossBackwardGPU<Dtype> << <CAFFE_GET_BLOCKS(nthreads),
