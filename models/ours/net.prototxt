@@ -1,0 +1,735 @@
+name: "3D Region Proposal Network"
+layer {
+  name: 'mhd_input'
+  type: 'MHDRoiData'
+  top: 'data'
+  top: 'im_info'
+  top: 'gt_boxes'
+  mhd_data_param {  
+    source: "F:/Deep/MyDataset/LITS/_train_set_list.txt"  
+    root_folder: "F:/Deep/MyDataset/LITS/"  
+    batch_size: 1
+    shuffle: true
+    hist_matching: false
+    truncate_probability: 0.5
+    min_truncate_length: 50
+    inplane_shift: 5
+    min_intensity: -1000
+    max_intensity: 1600
+    random_deform: 0.0
+    deform_control_point: 2
+    deform_sigma: 15.0
+    contour_name_list {
+      name: "liver"
+      name: "lung-r"
+      name: "lung-l"
+      name: "kidney-r"
+      name: "kidney-l"
+      name: "femur-r"
+      name: "femur-l"
+      name: "bladder"
+      name: "heart"
+      name: "spleen"
+      name: "pancreas"
+    }
+    resample_spacing_x: 2
+    resample_spacing_y: 2
+    resample_spacing_z: 2
+    max_width: 150
+    max_height: 150
+    max_length: 1000
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: 'mhd_input'
+  type: 'MHDRoiData'
+  top: 'data'
+  top: 'im_info'
+  mhd_data_param {  
+    source: "F:/Deep/MyDataset/LITS/test/_test_set_list.txt"  
+    root_folder: "F:/Deep/MyDataset/LITS/test/"  
+    batch_size: 1
+    shuffle: true
+    hist_matching: false
+    truncate_probability: 0.5
+    min_truncate_length: 50
+    inplane_shift: 5
+    min_intensity: -1000
+    max_intensity: 1600
+    random_deform: 0.0
+    deform_control_point: 2
+    deform_sigma: 15.0
+    contour_name_list {
+      name: "liver"
+      name: "lung-r"
+      name: "lung-l"
+      name: "kidney-r"
+      name: "kidney-l"
+      name: "femur-r"
+      name: "femur-l"
+      name: "bladder"
+      name: "heart"
+      name: "spleen"
+      name: "pancreas"
+    }
+    resample_spacing_x: 2
+    resample_spacing_y: 2
+    resample_spacing_z: 2
+    max_width: 150
+    max_height: 150
+    max_length: 1000
+  }
+  include: { phase: TEST }
+}
+layer {
+  name: "conv_1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv_1"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 96
+    kernel_size: 11
+    kernel_size: 11
+    kernel_size: 11
+    stride: 4
+    stride: 4
+    stride: 4
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  bottom: "conv_1"
+  top: "conv_1"
+  name: "bn_conv_1"
+  type: "BatchNorm"
+  batch_norm_param {
+    use_global_stats: false
+  }
+  param {
+    lr_mult: 0
+  }
+  param {
+    lr_mult: 0
+  }
+  param {
+    lr_mult: 0
+  }
+}
+layer {
+  bottom: "conv_1"
+  top: "conv_1"
+  name: "scale_conv_1"
+  type: "Scale"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "relu_1"
+  type: "ReLU"
+  bottom: "conv_1"
+  top: "conv_1"
+}
+layer {
+  name: "pool_1"
+  type: "Pooling3D"
+  bottom: "conv_1"
+  top: "pool_1"
+  pooling_3d_param {
+    pool: MAX
+    kernel_l: 3
+    kernel_h: 3
+    kernel_w: 3
+    stride_l: 2
+    stride_h: 2
+    stride_w: 2
+  }
+}
+layer {
+  name: "conv_2"
+  type: "Convolution"
+  bottom: "pool_1"
+  top: "conv_2"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 256
+    pad: 2
+    pad: 2
+    pad: 2
+    kernel_size: 5
+    kernel_size: 5
+    kernel_size: 5
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  bottom: "conv_2"
+  top: "conv_2"
+  name: "bn_conv_2"
+  type: "BatchNorm"
+  batch_norm_param {
+    use_global_stats: false
+  }
+  param {
+    lr_mult: 0
+  }
+  param {
+    lr_mult: 0
+  }
+  param {
+    lr_mult: 0
+  }
+}
+layer {
+  bottom: "conv_2"
+  top: "conv_2"
+  name: "scale_conv_2"
+  type: "Scale"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "relu_2"
+  type: "ReLU"
+  bottom: "conv_2"
+  top: "conv_2"
+}
+layer {
+  name: "pool_2"
+  type: "Pooling3D"
+  bottom: "conv_2"
+  top: "pool_2"
+  pooling_3d_param {
+    pool: MAX
+    kernel_l: 3
+    kernel_h: 3
+    kernel_w: 3
+    stride_l: 2
+    stride_h: 2
+    stride_w: 2
+  }
+}
+layer {
+  name: "conv_3"
+  type: "Convolution"
+  bottom: "pool_2"
+  top: "conv_3"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 384
+    pad: 1
+    pad: 1
+    pad: 1
+    kernel_size: 3
+    kernel_size: 3
+    kernel_size: 3
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  bottom: "conv_3"
+  top: "conv_3"
+  name: "bn_conv_3"
+  type: "BatchNorm"
+  batch_norm_param {
+    use_global_stats: false
+  }
+  param {
+    lr_mult: 0
+  }
+  param {
+    lr_mult: 0
+  }
+  param {
+    lr_mult: 0
+  }
+}
+layer {
+  bottom: "conv_3"
+  top: "conv_3"
+  name: "scale_conv_3"
+  type: "Scale"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "relu_3"
+  type: "ReLU"
+  bottom: "conv_3"
+  top: "conv_3"
+}
+layer {
+  name: "conv_4"
+  type: "Convolution"
+  bottom: "conv_3"
+  top: "conv_4"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 384
+    pad: 1
+    pad: 1
+    pad: 1
+    kernel_size: 3
+    kernel_size: 3
+    kernel_size: 3
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  bottom: "conv_4"
+  top: "conv_4"
+  name: "bn_conv_4"
+  type: "BatchNorm"
+  batch_norm_param {
+    use_global_stats: false
+  }
+  param {
+    lr_mult: 0
+  }
+  param {
+    lr_mult: 0
+  }
+  param {
+    lr_mult: 0
+  }
+}
+layer {
+  bottom: "conv_4"
+  top: "conv_4"
+  name: "scale_conv_4"
+  type: "Scale"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "relu_4"
+  type: "ReLU"
+  bottom: "conv_4"
+  top: "conv_4"
+}
+layer {
+  name: "conv_5"
+  type: "Convolution"
+  bottom: "conv_4"
+  top: "conv_5"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 256
+    pad: 1
+    pad: 1
+    pad: 1
+    kernel_size: 3
+    kernel_size: 3
+    kernel_size: 3
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  bottom: "conv_5"
+  top: "conv_5"
+  name: "bn_conv_5"
+  type: "BatchNorm"
+  batch_norm_param {
+    use_global_stats: false
+  }
+  param {
+    lr_mult: 0
+  }
+  param {
+    lr_mult: 0
+  }
+  param {
+    lr_mult: 0
+  }
+}
+layer {
+  bottom: "conv_5"
+  top: "conv_5"
+  name: "scale_conv_5"
+  type: "Scale"
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "relu_5"
+  type: "ReLU"
+  bottom: "conv_5"
+  top: "conv_5"
+}
+layer {
+  name: "deconv_1"
+  type: "Deconvolution"
+  bottom: "conv_5"
+  top: "deconv_1"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  convolution_param {
+    num_output: 256
+    kernel_size: 2
+    kernel_size: 2
+    kernel_size: 2
+    pad: 0
+    pad: 0
+    pad: 0
+    stride: 2
+    stride: 2
+    stride: 2
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+    engine: CUDNN
+  }
+}
+
+layer {
+  name: "relu_deconv_1"
+  type: "ReLU"
+  bottom: "deconv_1"
+  top: "deconv_1"
+}
+
+layer {
+  name: "crop_1"
+  type: "Crop"
+  bottom: "conv_2"
+  bottom: "deconv_1"
+  top: "crop_1"
+  crop_param {
+    axis: 2
+    offset: 0
+    center_align: true
+  }
+}
+
+layer {
+  type: "Concat"
+  name: "concat_1"
+  top: "concat_1"
+  bottom: "crop_1"
+  bottom: "deconv_1"
+}
+
+#========= RPN ============
+
+layer {
+  name: "rpn_conv_3x3x3"
+  type: "Convolution"
+  bottom: "concat_1"
+  top: "rpn_conv_3x3x3"
+  param { 
+    lr_mult: 1.0 
+  }
+  param { 
+    lr_mult: 2.0 
+  }
+  convolution_param {
+    num_output: 320
+    kernel_size: 3 
+    pad: 1 
+    stride: 1
+    weight_filler { 
+      type: "gaussian" 
+      std: 0.01 
+    }
+    bias_filler { 
+      type: "constant" 
+      value: 0 
+    }
+  }
+}
+layer {
+  name: "rpn_relu_3x3x3"
+  type: "ReLU"
+  bottom: "rpn_conv_3x3x3"
+  top: "rpn_conv_3x3x3"
+}
+
+layer {
+  name: "rpn_cls_score"
+  type: "Convolution"
+  bottom: "rpn_conv_3x3x3"
+  top: "rpn_cls_score"
+  param { 
+    lr_mult: 1.0 
+  }
+  param { 
+    lr_mult: 2.0 
+  }
+  convolution_param {
+    num_output: 768   # 12(classes) * 64(anchors)
+    kernel_size: 1 
+    pad: 0 
+    stride: 1
+    weight_filler { 
+      type: "gaussian" 
+      std: 0.01 
+    }
+    bias_filler { 
+      type: "constant" 
+      value: 0 
+    }
+  }
+}
+
+layer {
+  name: "rpn_bbox_pred"
+  type: "Convolution"
+  bottom: "rpn_conv_3x3x3"
+  top: "rpn_bbox_pred"
+  param { lr_mult: 1.0 }
+  param { lr_mult: 2.0 }
+  convolution_param {
+    num_output: 384   # 6 * 64(anchors)
+    kernel_size: 1 
+    pad: 0 
+    stride: 1
+    weight_filler { 
+      type: "gaussian" 
+      std: 0.01 
+    }
+    bias_filler { 
+      type: "constant" 
+      value: 0 
+    }
+  }
+}
+
+layer {
+  bottom: "rpn_cls_score"
+  top: "rpn_cls_score_reshape"
+  name: "rpn_cls_score_reshape"
+  type: "Reshape"
+  reshape_param { 
+    shape { 
+      dim: 0 
+      dim: 12 # 12 classes
+      dim: -1 
+      dim: 0 
+      dim: 0 
+      } 
+    }
+}
+
+layer {
+  name: 'rpn-data'
+  type: 'AnchorTarget'
+  bottom: 'rpn_cls_score'
+  bottom: 'gt_boxes'
+  bottom: 'im_info'
+  bottom: 'data'
+  top: 'rpn_labels'
+  top: 'rpn_bbox_targets'
+  top: 'rpn_bbox_inside_weights'
+  top: 'rpn_bbox_outside_weights'
+  anchor_target_param {
+    anchor_size {
+      width: 15
+      width: 30
+      width: 60
+      width: 120
+      height: 15
+      height: 30
+      height: 60
+      height: 120
+      length: 15
+      length: 30
+      length: 60
+      length: 120
+    }
+    feat_stride_xy: 8
+    feat_stride_z: 8
+    rpn_clobber_positives: false
+    rpn_positive_overlap: 0.35
+    rpn_negative_overlap: 0.25
+    rpn_batchsize: 100
+    rpn_fg_fraction: 0.5
+    use_multi_classification: true
+    bbox_normalize: true
+    bbox_normalize_mean: 0
+    bbox_normalize_mean: 0
+    bbox_normalize_mean: 0
+    bbox_normalize_mean: 0
+    bbox_normalize_mean: 0
+    bbox_normalize_mean: 0
+    bbox_normalize_std: 0.15
+    bbox_normalize_std: 0.15
+    bbox_normalize_std: 0.15
+    bbox_normalize_std: 0.3
+    bbox_normalize_std: 0.3
+    bbox_normalize_std: 0.3
+  }
+  include: { phase: TRAIN }
+}
+
+layer {
+  name: "rpn_loss_cls"
+  type: "WeightedSoftmaxWithLoss"
+  bottom: "rpn_cls_score_reshape"
+  bottom: "rpn_labels"
+  propagate_down: 1
+  propagate_down: 0
+  top: "rpn_cls_loss"
+  loss_weight: 1
+  loss_param {
+    ignore_label: -1
+    normalize: true
+  }
+  weighted_softmax_loss_param {
+    #method: FOCAL_LOSS
+    method: ADAPTIVE_FOCAL_LOSS
+    #method: ADAPTIVE_WEIGHT
+    alpha: 1
+    gamma: 2
+  }
+  include: { phase: TRAIN }
+}
+
+layer {
+  name: "rpn_loss_bbox"
+  type: "SmoothL1Loss"
+  bottom: "rpn_bbox_pred"
+  bottom: "rpn_bbox_targets"
+  bottom: "rpn_bbox_inside_weights"
+  bottom: "rpn_bbox_outside_weights"
+  top: "rpn_loss_bbox"
+  loss_weight: 1
+  smooth_l1_loss_param { sigma: 1.0 }
+  include: { phase: TRAIN }
+}
+
+layer {
+  name: "rpn_cls_prob"
+  type: "Softmax"
+  bottom: "rpn_cls_score_reshape"
+  top: "rpn_cls_prob"
+  include: { phase: TEST }
+}
+
+layer {
+  name: 'rpn_cls_prob_reshape'
+  type: 'Reshape'
+  bottom: 'rpn_cls_prob'
+  top: 'rpn_cls_prob_reshape'
+  reshape_param { 
+    shape { 
+      dim: 0 
+      dim: 768 # 12(classes) * 64(anchors)
+      dim: -1 
+      dim: 0 
+      dim: 0 
+      } 
+    }
+  include: { phase: TEST }
+}
+
+layer {
+  name: 'rpn_output'
+  type: 'RPNOutput'
+  bottom: 'rpn_cls_prob_reshape'
+  bottom: 'rpn_bbox_pred'
+  bottom: 'im_info'
+  rpn_output_param {
+    anchor_size {
+      width: 15
+      width: 30
+      width: 60
+      width: 120
+      height: 15
+      height: 30
+      height: 60
+      height: 120
+      length: 15
+      length: 30
+      length: 60
+      length: 120
+   }
+    feat_stride_xy: 8
+    feat_stride_z: 8
+    rpn_min_size: 2
+    source: "F:/Deep/MyDataset/LITS/test/_test_set_list.txt"
+    roi_root_folder: "F:/Deep/MyDataset/LITS/test/results_ours/"
+    fg_score_threshold: 0.9
+    top_percent_proposal: 0.1
+    weighted_top_n_proposal: true
+    bbox_normalize: true
+    bbox_normalize_mean: 0
+    bbox_normalize_mean: 0
+    bbox_normalize_mean: 0
+    bbox_normalize_mean: 0
+    bbox_normalize_mean: 0
+    bbox_normalize_mean: 0
+    bbox_normalize_std: 0.15
+    bbox_normalize_std: 0.15
+    bbox_normalize_std: 0.15
+    bbox_normalize_std: 0.3
+    bbox_normalize_std: 0.3
+    bbox_normalize_std: 0.3
+  }
+  include: { phase: TEST }
+}
