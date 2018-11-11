@@ -1,5 +1,5 @@
 # Caffe with 3D Faster R-CNN
-This is a modified version of [Caffe](https://github.com/BVLC/caffe) which supports the **3D Faster R-CNN framework** and **3D Region Proposal Network** as described in our paper [Efficient Multiple Organ Localization in CT Image using Volumetric Region Proposal Network](Under review).
+This is a modified version of [Caffe](https://github.com/BVLC/caffe) which supports the **3D Faster R-CNN framework** and **3D Region Proposal Network** as described in our paper [**Efficient Multiple Organ Localization in CT Image using 3D Region Proposal Network**](Under review).
 
 This code has been compiled and passed on `Windows 7 (64 bits)` using `Visual Studio 2013`.
 
