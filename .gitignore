@@ -17,7 +17,9 @@
 
 # Compiled protocol buffers
 *.pb.h
+!include/caffe/proto/caffe.pb.h
 *.pb.cc
+!src/caffe/proto/caffe.pb.cc
 *_pb2.py
 
 # Compiled python
@@ -91,6 +93,9 @@ docs/dev
 *.ldb
 LOCK
 LOG*
+!include/caffe/layers/log_layer.hpp
+!src/caffe/layers/log_layer.cpp
+!src/caffe/layers/log_layer.cu
 CURRENT
 MANIFEST-*
 
@@ -101,3 +106,4 @@ MANIFEST-*
 *.opensdf
 *.pdb
 *.props
+!windows/CommonSettings.props

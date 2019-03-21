@@ -124,7 +124,7 @@ void MHDRoiDataLayer<Dtype>::DataLayerSetUp(const vector<Blob<Dtype>*>& bottom,
 			roi_z1.push_back(z1);
 			label_range[2][1] = max(label_range[2][1], z1);
 		}
-		if (!contour_labels.empty()) {
+		if (!contour_labels.empty() || this->phase() == TEST) {
 			ImageType::DirectionType direct_src;
 			for (int i = 0; i < 3; ++i) {
 				for (int j = 0; j < 3; ++j) {
