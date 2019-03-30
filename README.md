@@ -27,7 +27,7 @@ Run `.\windows\Caffe.bat` and build the project `caffe` in `Visual Studio 2013`.
 Please download and unzip the CT images from [LiTS challenge](https://competitions.codalab.org/competitions/17094). Note that, the original CT images of LiTS dataset are stored in `*.nii` format. Please convert them to `*.mhd` format.
 
 ### Download annotation data
-The organ bounding-box annotations could be downloaded from [this repository](https://github.com/superxuang/caffe_3d_faster_rcnn/annotations_on_LiTS/) or [IEEE DataPort](http://dx.doi.org/10.21227/df8g-pq27).
+The organ bounding-box annotations could be downloaded from [this repository](./annotations_on_LiTS/) or [IEEE DataPort](http://dx.doi.org/10.21227/df8g-pq27).
 
 ### Prepare data
 Move the CT images and the bounding-box annotations to a data folder, and create an entry list file (`_train_set_list.txt`) in the same folder. To this end, the data folder is organized in the folloing way:
