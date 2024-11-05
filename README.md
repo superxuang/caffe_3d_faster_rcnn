@@ -111,7 +111,6 @@ layer {
 Run `.\models\ours\train.bat`
 
 ## License and Citation
-
 Please cite our paper and Caffe if it is useful for your research:
 
     @article{xu2019organlocalization, 
@@ -133,6 +132,10 @@ Please cite our paper and Caffe if it is useful for your research:
       title = {Caffe: Convolutional Architecture for Fast Feature Embedding},
       year = {2014}
     }
+
+## Contact
+You are welcome to contact us:  
+  - [xux12@rpi.edu](mailto:xux12@rpi.edu) ([Dr. Xuanang Xu](https://superxuang.github.io/))
     
 Caffe is released under the [BSD 2-Clause license](https://github.com/BVLC/caffe/blob/master/LICENSE).
 The BVLC reference models are released for unrestricted use.
